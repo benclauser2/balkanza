@@ -1,6 +1,6 @@
 'use strict';
 
-// Placeholder content — replace with final copy.
+// Placeholder content. Replace with final copy.
 const QUESTIONS = [
   'I can name my partner’s closest friends.',
   'I know what is stressing my partner out right now.',
@@ -30,11 +30,20 @@ const RESULT_BANDS = [
     min: 15,
     title: ['You know them ', 'by heart', '.'],
     summary:
-      'Placeholder result copy. You pay close attention to your partner’s inner world — their worries, hopes and everyday preferences. That kind of knowledge is the foundation of a strong, close relationship.',
+      'Placeholder result copy. You pay close attention to your partner’s inner world: their worries, hopes and everyday preferences. That kind of knowledge is the foundation of a strong, close relationship.',
     tips: [
-      'Keep asking open-ended questions — people change, and so do their answers.',
-      'Share one thing you learned about them recently and why it stuck with you.',
-      'Plan a small surprise built around something only you would know.',
+      {
+        title: 'Keep asking',
+        body: 'People change, and so do their answers. Open-ended questions keep you up to date.',
+      },
+      {
+        title: 'Say what you noticed',
+        body: 'Share one thing you learned about them recently and why it stuck with you.',
+      },
+      {
+        title: 'Plan a small surprise',
+        body: 'Build it around something only you would know about them.',
+      },
     ],
   },
   {
@@ -43,20 +52,38 @@ const RESULT_BANDS = [
     summary:
       'Placeholder result copy. You know a lot about your partner, but there are still a few corners of their world left to explore. Curiosity is the easiest gift you can give each other.',
     tips: [
-      'Pick two statements you answered “false” to and ask about them tonight.',
-      'Swap phones for one dinner a week and just talk.',
-      'Ask about their day with a follow-up question, not just “how was it?”',
+      {
+        title: 'Follow up on the “false” ones',
+        body: 'Pick two statements you answered false to and ask about them tonight.',
+      },
+      {
+        title: 'Phones down at dinner',
+        body: 'Set your phones aside for one dinner a week and just talk.',
+      },
+      {
+        title: 'Ask the second question',
+        body: 'Don’t stop at “how was your day?” Ask a follow-up about what they tell you.',
+      },
     ],
   },
   {
     min: 0,
     title: ['Time to ', 'get curious', '.'],
     summary:
-      'Placeholder result copy. There’s plenty you haven’t discovered about your partner yet — and that’s good news. Every question you ask is a chance to feel closer.',
+      'Placeholder result copy. There’s plenty you haven’t discovered about your partner yet, and that’s good news. Every question you ask is a chance to feel closer.',
     tips: [
-      'Take the quiz together and talk through each statement.',
-      'Ask your partner to tell you a story from their childhood.',
-      'Set aside twenty distraction-free minutes each day to catch up.',
+      {
+        title: 'Take it together',
+        body: 'Go through the quiz side by side and talk over each statement.',
+      },
+      {
+        title: 'Ask for a story',
+        body: 'Have your partner tell you about a moment from their childhood.',
+      },
+      {
+        title: 'Make twenty minutes',
+        body: 'Set aside twenty distraction-free minutes each day to catch up.',
+      },
     ],
   },
 ];
@@ -72,6 +99,29 @@ const renderTitle = (element, [before = '', emphasis = '', after = '']) => {
   const em = document.createElement('em');
   em.textContent = emphasis;
   element.replaceChildren(before, em, after);
+};
+
+const createElement = (tag, className, text) => {
+  const element = document.createElement(tag);
+  element.className = className;
+  element.textContent = text;
+  return element;
+};
+
+// The visible "01" is decorative; the <ol> already conveys order to assistive tech.
+const renderTip = ({ title, body }, index) => {
+  const number = createElement('span', 'quiz-result__tip-n', String(index + 1).padStart(2, '0'));
+  number.setAttribute('aria-hidden', 'true');
+
+  const text = createElement('div', 'quiz-result__tip-text', '');
+  text.append(
+    createElement('h4', 'quiz-result__tip-title', title),
+    createElement('p', 'quiz-result__tip-body', body),
+  );
+
+  const li = createElement('li', 'quiz-result__tip', '');
+  li.append(number, text);
+  return li;
 };
 
 const animateIn = (element) => {
@@ -151,6 +201,41 @@ const initLangSwitch = () => {
   });
 };
 
+const TOOLTIP_GUTTER = 16;
+
+// Shift the bubble left when it would overflow the right edge of the viewport.
+const positionBubble = (bubble) => {
+  bubble.style.setProperty('--tip-shift', '0px');
+  const overflow = bubble.getBoundingClientRect().right - (document.documentElement.clientWidth - TOOLTIP_GUTTER);
+  if (overflow > 0) bubble.style.setProperty('--tip-shift', `${-Math.ceil(overflow)}px`);
+};
+
+const initTooltips = () => {
+  document.querySelectorAll('.tip').forEach((tip) => {
+    const trigger = tip.querySelector('.tip__trigger');
+    const bubble = tip.querySelector('.tip__bubble');
+    if (!trigger || !bubble) return;
+
+    const show = () => positionBubble(bubble);
+    const reset = () => tip.classList.remove('is-dismissed');
+
+    tip.addEventListener('mouseenter', show);
+    tip.addEventListener('focusin', show);
+    tip.addEventListener('mouseleave', reset);
+    tip.addEventListener('focusout', reset);
+
+    // Safari doesn't focus buttons on tap, so focus explicitly to open the tooltip on touch.
+    trigger.addEventListener('click', () => trigger.focus());
+
+    tip.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || tip.classList.contains('is-dismissed')) return;
+      // Close only this tooltip, not the surrounding mobile nav.
+      event.stopPropagation();
+      tip.classList.add('is-dismissed');
+    });
+  });
+};
+
 const initQuiz = () => {
   const el = {
     intro: document.getElementById('quiz-intro'),
@@ -226,13 +311,7 @@ const initQuiz = () => {
     el.score.textContent = String(score);
     el.scoreTotal.textContent = `out of ${total}`;
     el.summary.textContent = band.summary;
-    el.tips.replaceChildren(
-      ...band.tips.map((tip) => {
-        const li = document.createElement('li');
-        li.textContent = tip;
-        return li;
-      }),
-    );
+    el.tips.replaceChildren(...band.tips.map(renderTip));
     el.shareStatus.textContent = '';
 
     showSection(el.result);
@@ -326,5 +405,6 @@ const initFooterYear = () => {
 
 initNav();
 initLangSwitch();
+initTooltips();
 initQuiz();
 initFooterYear();

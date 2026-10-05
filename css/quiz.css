@@ -483,6 +483,86 @@ ul {
   margin-bottom: 36px;
 }
 
+/* Tooltip: shown on hover or focus, dismissed with Escape (see initTooltips). */
+.tip {
+  position: relative;
+}
+
+.tip__trigger {
+  cursor: help;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tip__trigger:hover {
+  border-color: var(--muted);
+  background: var(--line);
+}
+
+.tip__trigger:focus-visible {
+  border-radius: var(--radius-pill);
+}
+
+.tip__icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+  opacity: 0.7;
+}
+
+.tip__bubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  z-index: 10;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 32px));
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: 0 12px 28px -12px #1f141080;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(var(--tip-shift, 0px), 4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+}
+
+/* Invisible bridge so the pointer can move onto the bubble without it closing. */
+.tip__bubble::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 10px;
+}
+
+.tip__bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: calc(18px - var(--tip-shift, 0px));
+  border: 6px solid transparent;
+  border-top-color: var(--ink);
+}
+
+.tip:hover .tip__bubble,
+.tip:focus-within .tip__bubble {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(var(--tip-shift, 0px), 0);
+}
+
+.tip.is-dismissed .tip__bubble {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .quiz-notice {
   margin-top: 16px;
   color: var(--wine-deep);
@@ -687,26 +767,54 @@ ul {
   font-weight: 500;
 }
 
+/* Numbered steps mirror the main site's "How it works" (.v3-how__step). */
 .quiz-result__tips {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.quiz-result__tips li {
-  position: relative;
-  padding-left: 28px;
+.quiz-result__tip {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 24px;
+  padding: 22px 28px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--cream);
+}
+
+.quiz-result__tip-n {
+  min-width: 56px;
+  color: var(--wine);
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-result__tip-title {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.quiz-result__tip-body {
+  margin: 0;
   color: var(--ink-2);
-}
-
-.quiz-result__tips li::before {
-  content: "";
-  position: absolute;
-  top: 0.55em;
-  left: 4px;
-  width: 9px;
-  height: 9px;
-  background: var(--gold-warm);
-  transform: rotate(45deg);
+  font-size: 16px;
+  line-height: 1.55;
 }
 
 .quiz-result__actions {
@@ -949,6 +1057,20 @@ ul {
 
   .quiz-card__options {
     grid-template-columns: 1fr;
+  }
+
+  .quiz-result__tip {
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .quiz-result__tip-n {
+    min-width: 44px;
+    font-size: 36px;
+  }
+
+  .quiz-result__tip-title {
+    font-size: 19px;
   }
 
   .quiz-card__nav .btn,

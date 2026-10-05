@@ -17,7 +17,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/quiz.css">
   <script src="js/quiz.js" defer></script>
 </head>
@@ -82,15 +82,48 @@
           How well do you <em>really</em> know your partner?
         </h1>
         <p class="quiz-hero__sub">
-          Placeholder intro copy. Twenty quick true-or-false statements about the person you love —
+          Placeholder intro copy. Twenty quick true-or-false statements about the person you love:
           their friends, their worries, their dreams, and yes, how they take their kafa.
           Answer honestly. Nobody's watching (except maybe your tetka).
         </p>
 
         <ul class="quiz-hero__meta" aria-label="Quiz details">
-          <li class="tag">20 questions</li>
-          <li class="tag">About 3 minutes</li>
-          <li class="tag">Private — nothing is saved</li>
+          <li class="tip">
+            <button type="button" class="tag tip__trigger" aria-describedby="tip-questions">
+              20 questions
+              <svg class="tip__icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                <circle cx="8" cy="8" r="6.5" />
+                <path d="M8 7.25v4M8 4.75v.01" />
+              </svg>
+            </button>
+            <span class="tip__bubble" role="tooltip" id="tip-questions">
+              Placeholder tooltip. Twenty true-or-false statements about your partner's world. Just answer what you honestly know.
+            </span>
+          </li>
+          <li class="tip">
+            <button type="button" class="tag tip__trigger" aria-describedby="tip-time">
+              About 3 minutes
+              <svg class="tip__icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                <circle cx="8" cy="8" r="6.5" />
+                <path d="M8 7.25v4M8 4.75v.01" />
+              </svg>
+            </button>
+            <span class="tip__bubble" role="tooltip" id="tip-time">
+              Placeholder tooltip. Most people finish in under three minutes. Go with your first instinct.
+            </span>
+          </li>
+          <li class="tip">
+            <button type="button" class="tag tip__trigger" aria-describedby="tip-private">
+              Private, nothing saved
+              <svg class="tip__icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                <circle cx="8" cy="8" r="6.5" />
+                <path d="M8 7.25v4M8 4.75v.01" />
+              </svg>
+            </button>
+            <span class="tip__bubble" role="tooltip" id="tip-private">
+              Placeholder tooltip. Your answers stay in your browser. Nothing is sent, stored or shared.
+            </span>
+          </li>
         </ul>
 
         <button type="button" class="btn btn-primary" id="quiz-start" disabled>
@@ -159,7 +192,7 @@
           <p class="quiz-result__summary" id="quiz-result-summary"></p>
 
           <h3 class="quiz-result__tips-title">Try this week</h3>
-          <ul class="quiz-result__tips" id="quiz-result-tips"></ul>
+          <ol class="quiz-result__tips" id="quiz-result-tips"></ol>
         </div>
 
         <div class="quiz-result__actions">
@@ -189,7 +222,7 @@
 
         <div class="article__body">
           <p>
-            Most couples feel they know each other well — until a simple question catches them out.
+            Most couples feel they know each other well, until a simple question catches them out.
             Real closeness goes beyond favourite foods and birthdays. It's knowing what your partner
             is quietly worried about, what they're proud of, and what they still dream about.
           </p>
@@ -210,7 +243,7 @@
           </aside>
 
           <p>
-            Ask them over coffee, on a long drive, or after Sunday lunch. You may hear something new —
+            Ask them over coffee, on a long drive, or after Sunday lunch. You may hear something new,
             and your partner will feel truly seen. Placeholder copy; replace with final text.
           </p>
         </div>
@@ -226,7 +259,7 @@
         your food and your sense of humour.
       </p>
       <a class="btn btn-primary btn-large" href="https://app.balkanza.com/register">
-        Join free — takes 3 minutes <span aria-hidden="true">→</span>
+        Join free in 3 minutes <span aria-hidden="true">→</span>
       </a>
     </section>
   </main>
